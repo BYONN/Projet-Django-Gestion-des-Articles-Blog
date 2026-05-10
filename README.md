@@ -21,7 +21,7 @@ BlogMaster est une plateforme de blogging robuste et dynamique développée avec
 ## Technologies Utilisées
 
 *   **Backend :** Python, Django
-*   **Frontend :** HTML5, CSS3, Bootstrap
+*   **Frontend :** HTML5, CSS, Bootstrap
 *   **Base de données :** MySQL
 
 ## Architecture des Modèles (Base de données)
