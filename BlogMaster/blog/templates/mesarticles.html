@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Mes articles{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">Mes articles</h3>
+
+        {% if user.role == 'Auteur' or user.is_superuser %}
+        <a href="/article/add/" class="btn btn-primary"><span class="bx bx-pen-plus"></span> Créer un article</a>
+        {% endif %}
+    </div>
+
+    {% for article in articles %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="col">
+                <span class="badge bg-primary mb-2">
+                    {{article.type_contenu}}
+                </span>
+                <span class="badge {% if article.statut == 'Brouillon' %}bg-warning {% else %} bg-success {% endif %} mb-2">{{article.statut}}</span>
+            </div>
+
+            <h5 class="card-title">{{ article.titre }}</h5>
+            <span class="text-secondary"> Publié le {{ article.date_creation }}</span>
+            <p class="card-text mt-2">{{ article.contenu | truncatechars:100 }}</p>
+            <a href="/article/{{article.id}}" class="btn btn-outline-primary">Voir plus</a>
+            <a href="/article/edit/{{article.id}}/" class="btn btn-outline-warning">Modifier</a>
+            <a href="/article/delete/{{article.id}}/" class="btn btn-outline-danger" onclick="return confirm('Vous voulez supprimer cet article?')">Supprimer</a>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

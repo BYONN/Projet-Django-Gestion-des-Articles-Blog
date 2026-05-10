@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Profil de {{utilisateur}}{% endblock %}
+
+
+{% block content %}
+    <div class="container mt-5">
+
+        <div class="row justify-content-center">
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center">
+                        <h2 class="card-title">{{utilisateur}}</h2>
+
+                        {% if utilisateur.is_superuser %}
+                            <span class="badge bg-danger mb-3">Editeur</span>
+                        {% endif %}
+
+                        {% if utilisateur.role == 'Auteur' %}
+                            <span class="badge bg-success mb-3">Auteur</span>
+                        {% else %}
+                            <span class="badge bg-info mb-3">Lecteur</span>
+                        {% endif %}
+
+                        <p class="text-muted mb-0">{{utilisateur.first_name}} {{utilisateur.last_name}}</p>
+                        <p class="text-muted">{{utilisateur.email}}</p>
+
+                        <hr>
+
+                        <h5 class="text-start">Biographie</h5>
+                        {% if utilisateur.biographie %}
+                            <p class="text-start">{{utilisateur.biographie}}</p>
+                        {% else %}
+                            <p class="text-start text-muted fst-italic">Aucune biographie.</p>
+                        {% endif %}
+
+                        {% if user == utilisateur %}
+                            <button class="btn btn-outline-primary btn-sm mt-3 w-100" data-bs-toggle="collapse" data-bs-target="#editBio">
+                                <span class="bx bx-edit"></span> Modifier ma biographie
+                            </button>
+                            <div class="collapse mt-3 text-start" id="editBio">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <textarea name="biographie" class="form-control" rows="4">{{utilisateur.biographie}}</textarea>
+
+                                    <button type="submit" class="btn btn-primary btn-sm w-100">Enregistrer</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if utilisateur.role == 'Auteur'%}
+            <div class="col-md-8">
+                <h3 class="mb-4">Articles publiés</h3>
+                {% if articles %}
+                    {% for article in articles %}
+                        {% if article.statut == "Publié" %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <span class="badge bg-primary mb-2">{{article.type_contenu}}</span>
+                                    <h5 class="card-title">{{article.titre}}</h5>
+                                    <span class="text-secondary">Publié le {{article.date_creation}}</span>
+                                    <p class="card-text mt-2">{{article.contenu | truncatechars:100}}</p>
+                                    <a href="/article/{{article.id}}/" class="btn btn-outline-primary btn-sm">Voir l'article</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                        <div class="alert aler-light border">Cet utilisateur n'a pas encore publié d'articles.</div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+

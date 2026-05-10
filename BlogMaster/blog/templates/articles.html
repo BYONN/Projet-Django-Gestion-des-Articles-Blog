@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Articles{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0">Articles récents</h3>
+
+        {% if user.role == 'Auteur' or user.is_superuser %}
+            <a href="/article/add/" class="btn btn-primary"><span class="bx bx-pen-plus"></span> Créer un article</a>
+        {% endif %}   
+    </div>
+
+    <div class="row mb-4 ">
+        <div class="col-md-6 col-lg-8">
+            <form method="GET" action="/articles/">
+                <div class="input-group shadow-sm">
+                    <select name="categorie" class="form-select" style="max-width:300px;">
+                        <option value="">Toutes les catégories</option>
+
+                        {% for category in categories %}
+                            <option value="{{category.id}}" {% if selected_cat == category.id %}selected{% endif %}>{{category}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" name="recherche" class="form-control" placeholder="Cherchez par titre ou auteur..">
+
+                    <button type="submit" class="btn btn-outline-primary">Cherchez</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% for article in articles %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <span class="badge bg-primary mb-2">
+                {{article.type_contenu}}
+            </span>
+            <h5 class="card-title">{{ article.titre }}</h5>
+            <span class="text-secondary"> Publié par <a href="/profile/{{article.user}}">{{ article.user }}</a> le {{ article.date_creation }}</span>
+            <p class="card-text mt-2">{{ article.contenu | truncatechars:100 }}</p>
+            <a href="/article/{{article.id}}" class="btn btn-outline-primary">Voir plus</a>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

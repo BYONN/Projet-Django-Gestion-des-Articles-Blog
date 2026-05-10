@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}BlogMaster{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.3.8/litera/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/"> <span class="bx bx-sm bx-news"></span> BlogMaster</a>
+
+            <div class="ms-auto">
+                 <a href="/articles/" class="btn btn-outline-light d-inline-flex align-items-center me-2"><span
+                        class="bx bx-article me-1"> </span>Voir articles</a>
+                {% if user.is_authenticated %}
+                {% if user.role == 'Auteur' or user.is_superuser %}
+                <a href="/article/add/" class="btn btn-outline-light d-inline-flex align-items-center me-2"><span
+                        class="bx bx-pen-plus me-1"> </span>Créer un article</a>
+                <a href="/myarticles/" class="btn btn-outline-light d-inline-flex align-items-center me-3"><span
+                        class="bx bx-article me-1"> </span>Mes articles</a>
+                {% endif %}
+                <span class="navbar-text me-3 text-white">Bonjour, <a href="/profile/{{user}}">{{user}}</a>!</span>
+                <a href="/logout/" class="btn btn-outline-danger d-inline-flex align-items-center"> <span
+                        class="bx bx-arrow-out-left-square-half me-1"></span>Déconnexion</a>
+                {% else %}
+                <a href="/login/" class="btn btn-outline-light d-inline-flex align-items-center"> <span
+                        class="bx bx-arrow-in-right-square-half me-1"></span>Se connecter</a>
+                {% endif %}
+            </div>
+        </div>
+
+    </nav>
+
+    <div class="container mt-3">
+            {% if messages %}
+                {% for message in messages %}
+
+                <div class="alert alert-{% if message.tags == 'error'%}danger{% else %}success{% endif %} alert-dismissible fade show shadow-sm" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    {{message}}
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    {% block content %}
+
+    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

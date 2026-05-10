@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}{{article.titre}}{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="mb-4">
+        <span class="badge bg-primary mb-2">{{article.type_contenu}}</span>
+        <h1 class="display-4 fw-bold">{{article.titre}}</h1>
+        <p class="text-secondary">Publié par <strong><a href="/profile/{{article.user}}">{{article.user}}</a></strong> le {{article.date_creation}}</p>
+    </div>
+
+    {% if user == article.user or user.is_superuser %}
+        <a href="/article/edit/{{article.id}}/" class="btn btn-warning btn-sm mb-3"> <span class="bx bx-edit"></span> Modifier cet article</a>
+        <a href="/article/delete/{{article.id}}/" class="btn btn-danger btn-sm mb-3" onclick="return confirm('Vous voulez supprimer cet article?')"> <span class="bx bx-trash"></span> Supprimer</a>
+
+    {% endif %}
+
+    <div class="fs-5" style="line-height: 1.8;">{{article.contenu | linebreaks }}</div>
+    
+    <hr class="my-5">
+
+    <div class="mb-5">
+        <h3>Commentaires</h3>
+
+        {% if user.is_authenticated %}
+            <form method="POST" action="/comment/add/{{article.id}}/" class="mb-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <textarea name="texte" class="form-control" rows="3" placeholder="Laissez un commentaire..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Publier</button>
+            </form>
+        {% else %}
+            <p><a href="/login">Connectez-vous</a> pour laisser un commentaire.</p>
+        {% endif %}
+
+        {% for comment in comments %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-body-secondary"><a href="/profile/{{comment.user}}">{{comment.user}}</a></h6>
+                <p class="card-text">{{comment.texte}}</p>
+                <p class="text-secondary">Publié le {{comment.date_creation}}</p>
+            </div>
+        </div>
+        
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
