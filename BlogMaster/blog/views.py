@@ -40,7 +40,7 @@ def articles(request):
 
 def myarticles(request):
     getarticles = Article.objects.filter(user = request.user).order_by('-date_creation')
-    if not request.user.role == 'Auteur' or not request.user.is_superuser:
+    if not request.user.role == 'Auteur' and not request.user.is_superuser:
             messages.error(request, 'Vous n\'avez pas le droit à acceder cet page')
             return redirect('home')
     context = {
